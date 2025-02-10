@@ -1,0 +1,42 @@
+Epoch 1/5: 100%|██████████| 519/519 [08:43<00:00,  1.01s/it, accuracy=83.6, loss=0.136]
+
+Epoch 1/5: Train Loss = 0.3650, Train Accuracy = 83.58%
+Validation Loss = 0.2466, Validation Accuracy = 88.98%
+
+Epoch 2/5: 100%|██████████| 519/519 [08:28<00:00,  1.02it/s, accuracy=84.9, loss=0.393] 
+
+Epoch 2/5: Train Loss = 0.3532, Train Accuracy = 84.87%
+Validation Loss = 0.2425, Validation Accuracy = 89.80%
+
+Epoch 3/5: 100%|██████████| 519/519 [08:20<00:00,  1.04it/s, accuracy=85.8, loss=0.286] 
+
+Epoch 3/5: Train Loss = 0.3479, Train Accuracy = 85.77%
+Validation Loss = 0.2523, Validation Accuracy = 89.68%
+
+Epoch 4/5: 100%|██████████| 519/519 [08:20<00:00,  1.04it/s, accuracy=85.7, loss=0.424] 
+
+Epoch 4/5: Train Loss = 0.3505, Train Accuracy = 85.71%
+Validation Loss = 0.2405, Validation Accuracy = 89.92%
+
+Epoch 5/5: 100%|██████████| 519/519 [08:20<00:00,  1.04it/s, accuracy=85.5, loss=1.18]  
+
+Epoch 5/5: Train Loss = 0.3561, Train Accuracy = 85.54%
+Validation Loss = 0.2466, Validation Accuracy = 89.78%
+
+Training complete
+
+Additional Metrics:
+False Positive Rate (FPR): 0.0613
+False Negative Rate (FNR): 0.1438
+AUC-ROC Score: 0.9675
+TN: 1961, FP: 128, FN: 296, TP: 1763
+              precision    recall  f1-score   support
+
+         0.0       0.87      0.94      0.90      2089
+         1.0       0.93      0.86      0.89      2059
+
+    accuracy                           0.90      4148
+   macro avg       0.90      0.90      0.90      4148
+weighted avg       0.90      0.90      0.90      4148
+
+Accuracy Score: 0.8977820636451301

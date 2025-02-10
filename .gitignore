@@ -1,0 +1,14 @@
+augmented_dataset/
+augmented_datasetv2/
+cropped_full/
+cropped_images/
+cropped_imagesv2/
+Full Dataset/
+no_person_full/
+no_persons_detected/
+no_persons_detectedv2/
+test/
+train/
+venv/
+augTEST/
+uploads_from_web/

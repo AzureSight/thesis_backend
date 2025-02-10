@@ -1,0 +1,55 @@
+Epoch 1/10: Train Loss = 0.2648, Train Accuracy = 89.84%
+Validation Loss = 0.2699, Validation Accuracy = 90.26%
+
+Epoch 2/10: 100%|██████████| 519/519 [36:34<00:00,  4.23s/it, accuracy=92.9, loss=0.0616]    
+
+Epoch 2/10: Train Loss = 0.1919, Train Accuracy = 92.92%
+Validation Loss = 0.1445, Validation Accuracy = 94.65%
+
+Epoch 3/10: 100%|██████████| 519/519 [12:26<00:00,  1.44s/it, accuracy=97.2, loss=0.135]  
+
+Epoch 3/10: Train Loss = 0.0790, Train Accuracy = 97.20%
+Validation Loss = 0.1101, Validation Accuracy = 96.34%
+
+Epoch 4/10: 100%|██████████| 519/519 [12:25<00:00,  1.44s/it, accuracy=98, loss=0.0022]    
+
+Epoch 4/10: Train Loss = 0.0552, Train Accuracy = 98.01%
+Validation Loss = 0.1048, Validation Accuracy = 96.43%
+
+Epoch 5/10: 100%|██████████| 519/519 [12:25<00:00,  1.44s/it, accuracy=98.6, loss=0.00752] 
+
+Epoch 5/10: Train Loss = 0.0389, Train Accuracy = 98.63%
+Validation Loss = 0.0861, Validation Accuracy = 96.91%
+
+Epoch 6/10: 100%|██████████| 519/519 [12:26<00:00,  1.44s/it, accuracy=98.6, loss=0.0605]  
+
+Epoch 6/10: Train Loss = 0.0372, Train Accuracy = 98.60%
+Validation Loss = 0.1247, Validation Accuracy = 96.34%
+
+Epoch 7/10: 100%|██████████| 519/519 [12:14<00:00,  1.41s/it, accuracy=99.1, loss=0.00161] 
+
+Epoch 7/10: Train Loss = 0.0229, Train Accuracy = 99.14%
+Validation Loss = 0.0909, Validation Accuracy = 97.25%
+
+Epoch 8/10: 100%|██████████| 519/519 [12:12<00:00,  1.41s/it, accuracy=99, loss=0.000603]  
+
+Epoch 8/10: Train Loss = 0.0257, Train Accuracy = 99.02%
+Validation Loss = 0.1467, Validation Accuracy = 96.89%
+
+Epoch 9/10: 100%|██████████| 519/519 [12:14<00:00,  1.41s/it, accuracy=99, loss=0.00621]   
+
+Epoch 9/10: Train Loss = 0.0287, Train Accuracy = 98.96%
+Validation Loss = 0.1082, Validation Accuracy = 96.67%
+
+Epoch 10/10: 100%|██████████| 519/519 [12:11<00:00,  1.41s/it, accuracy=99.4, loss=0.00108] 
+
+Epoch 10/10: Train Loss = 0.0181, Train Accuracy = 99.39%
+Validation Loss = 0.0907, Validation Accuracy = 97.54%
+
+Training complete
+
+Additional Metrics:
+False Positive Rate (FPR): 0.0287
+False Negative Rate (FNR): 0.0204
+AUC-ROC Score: 0.9962
+TN: 2029, FP: 60, FN: 42, TP: 2017

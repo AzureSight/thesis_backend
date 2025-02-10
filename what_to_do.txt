@@ -1,0 +1,54 @@
+build a inception-svm model
+build a inception only model
+build a resnet only model
+
+If Validation Loss continues increasing while Train Loss drops, 
+this could indicate overfitting—meaning the model memorizes the training data rather than generalizing well.
+
+1. Training Accuracy
+Use Case: Measures how well the model fits the training data.
+Pros: It’s useful for detecting overfitting. If your training accuracy is much higher than validation accuracy, the model may be overfitting.
+Cons: It doesn’t provide any insight into how the model generalizes to unseen data.
+2. Validation Accuracy
+Use Case: Measures how well the model performs on the validation set, which is a proxy for unseen data.
+Pros: This is often the primary metric used for hyperparameter tuning, as it shows how well the model generalizes. Validation accuracy can help detect underfitting or overfitting.
+Cons: It doesn't necessarily tell you how confident the model is in its predictions. It’s possible for a model to have high validation accuracy but still make uncertain or poor predictions in some cases.
+
+
+
+TRY 0.0001, batch 64
+
+
+Num classes  = 1
+criterion = nn.BCEWithLogitsLoss()  # Use this instead of BCELoss()
+def forward(self, x_resnet, x_inception):
+    resnet_features = self.resnet(x_resnet)
+    inception_features = self.inception(x_inception)
+    if isinstance(inception_features, tuple):  # InceptionV3 returns a tuple
+        inception_features = inception_features[0]  # Take only the main output
+    fused_features = torch.cat((resnet_features, inception_features), dim=1)
+    fused_features = self.batch_norm(fused_features)
+    fused_features = self.relu(fused_features)
+    fused_features = self.dropout(fused_features)
+    output = self.fc(fused_features)  # No sigmoid here
+    return output  # Raw logits
+
+
+Hyperparameter Tuning - Adjusting external settings that affect training but are not learned by the model itself.
+	
+example - Learning rate, batch size, optimizer type (SGD, Adam), dropout rate, weight decay, etc.
+
+Fine-Tuning - Taking a pretrained model and updating some or all of its weights for a new task.	
+
+example - Unfreezing layers, training only specific layers, changing the classifier head.
+
+
+
+
+FINAL TO DO
+ DO the 3 way split, train again for baseline and proposed
+RESNET ON baseline is not learning since only transfer learning not finetuning
+adjust b1 for momentum like behaviour if loss oscillates up and down
+If your model is already converging well with default Adam (β₁ = 0.9, β₂ = 0.999), you likely don’t need to change anything.
+If your model oscillates too much, decreasing β₁ slightly (e.g., 0.85) can reduce aggressive updates.
+If your model converges too slowly, increasing β₁ (e.g., 0.95) might help accelerate it.
