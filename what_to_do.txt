@@ -1,6 +1,4 @@
-build a inception-svm model
-build a inception only model
-build a resnet only model
+
 
 If Validation Loss continues increasing while Train Loss drops, 
 this could indicate overfitting—meaning the model memorizes the training data rather than generalizing well.
@@ -16,7 +14,7 @@ Cons: It doesn't necessarily tell you how confident the model is in its predicti
 
 
 
-TRY 0.0001, batch 64
+TRY 0.0001, batch 64 or around it
 
 
 Num classes  = 1
@@ -46,9 +44,15 @@ example - Unfreezing layers, training only specific layers, changing the classif
 
 
 FINAL TO DO
+
  DO the 3 way split, train again for baseline and proposed
 RESNET ON baseline is not learning since only transfer learning not finetuning
 adjust b1 for momentum like behaviour if loss oscillates up and down
+build a inception-svm model
+build a inception only model
+build a resnet only model
+
 If your model is already converging well with default Adam (β₁ = 0.9, β₂ = 0.999), you likely don’t need to change anything.
 If your model oscillates too much, decreasing β₁ slightly (e.g., 0.85) can reduce aggressive updates.
 If your model converges too slowly, increasing β₁ (e.g., 0.95) might help accelerate it.
+
