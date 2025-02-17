@@ -12,3 +12,7 @@ train/
 venv/
 augTEST/
 uploads_from_web/
+MODELS/DATASETS
+MODELS/DARKNET
+MODELS/train_45
+MODELS/train_800

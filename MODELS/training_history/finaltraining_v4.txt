@@ -1,0 +1,77 @@
+
+Epoch 1/10: Train Loss = 0.6110, Train Accuracy = 75.18%
+Validation Loss = 0.3185, Validation Accuracy = 85.98%
+
+Before Step Learning Rate: 0.0003
+Current Learning Rate: 0.0002723074641843674
+Epoch 2/10: 100%|██████████| 227/227 [12:33<00:00,  3.32s/it, accuracy=88.5, loss=0.188] 
+
+Epoch 2/10: Train Loss = 0.2883, Train Accuracy = 88.53%
+Validation Loss = 0.1623, Validation Accuracy = 92.80%
+
+Before Step Learning Rate: 0.0002723074641843674
+Current Learning Rate: 0.00019980746418436736
+Epoch 3/10: 100%|██████████| 227/227 [12:27<00:00,  3.29s/it, accuracy=96.3, loss=0.108] 
+
+Epoch 3/10: Train Loss = 0.0961, Train Accuracy = 96.30%
+Validation Loss = 0.1133, Validation Accuracy = 95.14%
+
+Before Step Learning Rate: 0.00019980746418436736
+Current Learning Rate: 0.00011019253581563262
+Epoch 4/10: 100%|██████████| 227/227 [12:28<00:00,  3.30s/it, accuracy=98.9, loss=0.003]  
+
+Epoch 4/10: Train Loss = 0.0315, Train Accuracy = 98.91%
+Validation Loss = 0.0857, Validation Accuracy = 96.72%
+
+Before Step Learning Rate: 0.00011019253581563262
+Current Learning Rate: 3.769253581563263e-05
+Epoch 5/10: 100%|██████████| 227/227 [12:31<00:00,  3.31s/it, accuracy=99.8, loss=0.00658] 
+Epoch 1/10: 100%|██████████| 227/227 [12:10<00:00,  3.22s/it, accuracy=75.2, loss=0.195]
+
+Epoch 5/10: Train Loss = 0.0081, Train Accuracy = 99.80%
+Validation Loss = 0.0683, Validation Accuracy = 97.49%
+
+Before Step Learning Rate: 3.769253581563263e-05
+Current Learning Rate: 1e-05
+Epoch 6/10: 100%|██████████| 227/227 [12:34<00:00,  3.32s/it, accuracy=99.8, loss=0.00298] 
+
+Epoch 6/10: Train Loss = 0.0048, Train Accuracy = 99.85%
+Validation Loss = 0.0668, Validation Accuracy = 97.59%
+
+Before Step Learning Rate: 1e-05
+Current Learning Rate: 3.769253581563262e-05
+Epoch 7/10: 100%|██████████| 227/227 [12:23<00:00,  3.28s/it, accuracy=100, loss=0.0168]   
+
+Epoch 7/10: Train Loss = 0.0029, Train Accuracy = 99.95%
+Validation Loss = 0.0703, Validation Accuracy = 97.65%
+
+Before Step Learning Rate: 3.769253581563262e-05
+Current Learning Rate: 0.00011019253581563259
+Epoch 8/10: 100%|██████████| 227/227 [12:47<00:00,  3.38s/it, accuracy=99.8, loss=0.00236] 
+
+Epoch 8/10: Train Loss = 0.0061, Train Accuracy = 99.82%
+Validation Loss = 0.1594, Validation Accuracy = 95.56%
+
+Before Step Learning Rate: 0.00011019253581563259
+Current Learning Rate: 0.00019980746418436733
+Epoch 9/10: 100%|██████████| 227/227 [13:45<00:00,  3.64s/it, accuracy=96.5, loss=0.0856]
+
+Epoch 9/10: Train Loss = 0.0917, Train Accuracy = 96.52%
+Validation Loss = 0.1675, Validation Accuracy = 94.95%
+
+Before Step Learning Rate: 0.00019980746418436733
+Current Learning Rate: 0.0002723074641843674
+Epoch 10/10: 100%|██████████| 227/227 [13:42<00:00,  3.63s/it, accuracy=97.3, loss=0.0907] 
+
+Epoch 10/10: Train Loss = 0.0718, Train Accuracy = 97.27%
+Validation Loss = 0.1296, Validation Accuracy = 95.24%
+
+Before Step Learning Rate: 0.0002723074641843674
+Current Learning Rate: 0.0003
+Training complete
+
+Additional Metrics:
+False Positive Rate (FPR): 0.0405
+False Negative Rate (FNR): 0.0545
+AUC-ROC Score: 0.9910
+TN: 1470, FP: 62, FN: 86, TP: 1492
