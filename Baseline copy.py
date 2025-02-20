@@ -40,11 +40,11 @@ def compute_image_confidence(predictions):
 
 class_names = ['appropriate', 'inappropriate']  
 # Load the ResNet feature extractor
-load_ex = torch.load('./Saved models/svm/fullresnetextractor.pth')
+load_ex = torch.load('Saved models/svm/fullresnetextractor.pth')
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 load_ex.to(device)
 
-svm_model_path = os.path.join('./Saved models/svm', 'fulltorch_svm.pkl')
+svm_model_path = os.path.join('Saved models/svm', 'fulltorch_svm.pkl')
 load_svm = joblib.load(svm_model_path)
 
 resnet_transform = transforms.Compose([
@@ -62,40 +62,21 @@ def preprocess_image(img_path):
     return img_tensor_resnet
 
 
-# def predict_image(img_path):
-    
-
-#     img = Image.open(img_path).convert("RGB")
-#     img_tensor = resnet_transform(img).unsqueeze(0).to(device)  # Add batch dimension and move to device
-#     load_ex.eval()  # Ensure the model is in evaluation mode
-    
-#     with torch.no_grad():
-#         feature_map = load_ex(img_tensor)  
-#         flattened_features = feature_map.squeeze().cpu().numpy().reshape(1, -1)  
-#     prediction = load_svm.predict(flattened_features)  # Predict using the trained SVM classifier
-#     return [prediction[0]]
-# class_names
-
 def predict_image(img_path):
-    img = Image.open(img_path).convert("RGB")
-    img_tensor = resnet_transform(img).unsqueeze(0).to(device)  # Add batch dimension
-
-    load_ex.eval()
-    with torch.no_grad():
-        feature_map = load_ex(img_tensor)
-        flattened_features = feature_map.squeeze().cpu().numpy().reshape(1, -1)
-
-    # Get prediction probabilities
-    probabilities = load_svm.predict_proba(flattened_features)
-    confidence = max(probabilities[0])  # Highest probability
-    predicted_class_index = probabilities[0].argmax()
-    predicted_class = class_names[predicted_class_index]
-    print(confidence)
-    return {
-        'predicted_class': predicted_class,
-        'confidence': confidence
-    }
     
+
+    img = Image.open(img_path).convert("RGB")
+    img_tensor = resnet_transform(img).unsqueeze(0).to(device)  # Add batch dimension and move to device
+    load_ex.eval()  # Ensure the model is in evaluation mode
+    
+    with torch.no_grad():
+        feature_map = load_ex(img_tensor)  
+        flattened_features = feature_map.squeeze().cpu().numpy().reshape(1, -1)  
+    prediction = load_svm.predict(flattened_features)  # Predict using the trained SVM classifier
+    return class_names[prediction[0]]
+
+
+
 def baseline_get_yolo_preds(image_path: str):
     start_time = time.time()
     """
@@ -120,15 +101,13 @@ def baseline_get_yolo_preds(image_path: str):
     H, W = image.shape[:2]
     
     # Run inference
-    results = model.predict(image_path, device="cuda", conf=confidence_threshold, imgsz=416)
+    results = model.predict(image_path, device="cuda", conf=confidence_threshold)
     
     # Initialize lists for detections
     boxes, confidences = [], []
     image_with_boxes = image.copy()
     inappropriate_detected = False
     predictions = []
-    I_individual_confidences = []
-    A_individual_confidences = []
     
     for result in results:
         for box in result.boxes:
@@ -143,13 +122,8 @@ def baseline_get_yolo_preds(image_path: str):
     # Process detected persons
     if not boxes:
         label = predict_image(image_path)
-        print(f"Image classified as: {label['predicted_class']} with confidence: {label['confidence']}%")
         if label == 'inappropriate':
-            I_individual_confidences.append(float(label['confidence']))
             inappropriate_detected = True
-        else:
-            A_individual_confidences.append(float(label['confidence']))
-
         print(f"Image classified as: {label}")
         print("No persons detected in the image.")
     
@@ -159,11 +133,7 @@ def baseline_get_yolo_preds(image_path: str):
         if cropped_person.size == 0:
             label = predict_image(image_path)
             if label == 'inappropriate':
-                I_individual_confidences.append(float(label['confidence']))
                 inappropriate_detected = True
-            else:
-                A_individual_confidences.append(float(label['confidence']))
-
             print(f"Image classified as: {label}")
             continue
         
@@ -175,44 +145,32 @@ def baseline_get_yolo_preds(image_path: str):
             print(f"Error saving cropped person {i + 1}")
         # Classify the cropped person
         label = predict_image(cropped_person_path)
-        print(f"Person {i + 1} classified as: {label['predicted_class']} with confidence: {label['confidence']}%")
+        print(f"Person {i + 1} classified as: {label}")
         
         # Check if the person is inappropriate
         if label == 'inappropriate':
-            I_individual_confidences.append(float(label['confidence']))
             inappropriate_detected = True
-        else:
-            A_individual_confidences.append(float(label['confidence']))
-
+        
         # Draw bounding box on the image
-        person = int(i + 1)
         color = (0, 0, 255) if label == 'inappropriate' else (0, 255, 0)
         cv2.rectangle(image_with_boxes, (x, y), (x + w, y + h), color, 2)
-        cv2.putText(image_with_boxes, f"(person {person}) {label['predicted_class']} ({label['confidence']:.2f})", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-        
+        cv2.putText(image_with_boxes, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
         predictions.append({
-            'person': person,
-            'label': label['predicted_class'],
-            'confidence': float(label['confidence'])
+            'person': int(i + 1),
+            'label': label
         })
-
     
-    # predictions.append(compute_image_confidence(predictions))
-
+    predictions.append(compute_image_confidence(predictions))
+    
     # Save the output image with bounding boxes
     if cv2.imwrite(output_img_path, image_with_boxes):
         print(f"Image with bounding boxes saved to {output_img_path}")
     # Final classification of the entire image
     if inappropriate_detected:
-        average_confidence = np.mean(I_individual_confidences) if I_individual_confidences else 0.0
-        Ap_average_confidence = np.mean(A_individual_confidences) if A_individual_confidences else 0.0
-        predictions.append({"whole_image_label": "inappropriate", "total_confidence": average_confidence, "average_opposite_confidence": Ap_average_confidence})
+        predictions.append({"whole_image_label": "inappropriate"})
     else:
-        average_confidence = np.mean(A_individual_confidences) if A_individual_confidences else 0.0
-        In_average_confidence = np.mean(I_individual_confidences) if I_individual_confidences else 0.0
-        predictions.append({"whole_image_label": "appropriate", "total_confidence": average_confidence, "average_opposite_confidence": In_average_confidence})
-        
-    print(predictions)
+        predictions.append({"whole_image_label": "appropriate"})
+    
     predictions.append({"output_image_path": output_img_path})
     end_time = time.time()
     predictions.append({"total_time": end_time - start_time})
@@ -223,5 +181,5 @@ def baseline_get_yolo_preds(image_path: str):
 
 # # # Run the YOLO predictions
 # if __name__ == '__main__':
-#     baseline_get_yolo_preds("./DARKNET/zeb.jpg")
+#     baseline_get_yolo_preds("./DARKNET/test.jpg")
 

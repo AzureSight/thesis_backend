@@ -7,6 +7,7 @@ from PIL import Image
 import torch
 import tensorflow as tf
 from ultralytics import YOLO
+from torch import sigmoid
 
 
 print(torch.cuda.is_available())
@@ -20,7 +21,7 @@ warnings.filterwarnings("ignore", message="Scripted Inception3 always returns In
 # Load the model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-fuse = torch.jit.load("Saved models/resnet_inception_fullmodel_croppedv2.pt")
+fuse = torch.jit.load("Saved models/resnet_inception_fullmodel_croppedv7.pt")
 fuse.to(device)
 fuse.eval()
 
@@ -58,6 +59,8 @@ def predict_image(img_path):
     with torch.no_grad():
         outputs = fuse(img_tensor_resnet, img_tensor_inception)
         predicted_value = outputs.item()  # Extract scalar prediction
+        # probabilities = sigmoid(outputs)  # Apply sigmoid for confidence
+        # predicted_value = probabilities.item()
 
     # Compute confidence (confidence is the output of the model for a class)
     confidence = outputs[0][0] if predicted_value > 0.5 else 1 - outputs[0][0]
@@ -94,13 +97,14 @@ def proposed_get_yolo_preds(image_path: str):
     H, W = image.shape[:2]
     
     # Run inference
-    results = model.predict(image_path, device="cuda", conf=confidence_threshold)
+    results = model.predict(image_path, device="cuda", conf=confidence_threshold, imgsz=416)
     
     # Initialize lists for detections
     boxes, confidences, predictions = [], [], []
     image_with_boxes = image.copy()
     inappropriate_detected = False
-    individual_confidences = []
+    I_individual_confidences = []
+    A_individual_confidences = []
     
     for result in results:
         for box in result.boxes:
@@ -115,11 +119,15 @@ def proposed_get_yolo_preds(image_path: str):
     # Process detected persons
     if not boxes:
         label = predict_image(image_path)
-        individual_confidences.append(float(label['confidence']))
+
         print(f"Image classified as: {label['predicted_class']} with confidence: {label['confidence']}%")
         
         if label['predicted_class'] == 'inappropriate':
+            I_individual_confidences.append(float(label['confidence']))
             inappropriate_detected = True
+        else:
+            A_individual_confidences.append(float(label['confidence']))
+
         print("No persons detected in the image.")
     
     for i, (x, y, w, h) in enumerate(boxes):
@@ -127,10 +135,13 @@ def proposed_get_yolo_preds(image_path: str):
         
         if cropped_person.size == 0:
             label = predict_image(image_path)
-            individual_confidences.append(float(label['confidence']))
             print(f"Image classified as: {label['predicted_class']} with confidence: {label['confidence']}%")
             if label['predicted_class'] == 'inappropriate':
+                I_individual_confidences.append(float(label['confidence']))
                 inappropriate_detected = True
+            else:
+                A_individual_confidences.append(float(label['confidence']))
+
             continue
         
         cropped_person_path = os.path.join(cropped_folder, f"person_{i + 1}.jpg")
@@ -144,30 +155,37 @@ def proposed_get_yolo_preds(image_path: str):
         print(f"Person {i + 1} classified as: {label['predicted_class']} with confidence: {label['confidence']}%")
         
         if label['predicted_class'] == 'inappropriate':
+            I_individual_confidences.append(float(label['confidence']))
             inappropriate_detected = True
-        
+        else:
+            A_individual_confidences.append(float(label['confidence']))
+
+        person = int(i + 1)
         color = (0, 0, 255) if label['predicted_class'] == 'inappropriate' else (0, 255, 0)
         cv2.rectangle(image_with_boxes, (x, y), (x + w, y + h), color, 2)
-        cv2.putText(image_with_boxes, label['predicted_class'], (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        cv2.putText(image_with_boxes, f"(person {person}) {label['predicted_class']} ({label['confidence']:.2f})", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
         predictions.append({
-            'person': int(i + 1),
+            'person': person,
             'label': label['predicted_class'],
             'confidence': float(label['confidence'])
         })
-        individual_confidences.append(float(label['confidence']))
-    
-    # Compute average confidence
-    average_confidence = np.mean(individual_confidences) if individual_confidences else 0.0
-    
+
+  
+
     # Save the output image
     if cv2.imwrite(output_img_path, image_with_boxes):
         print(f"Image with bounding boxes saved to {output_img_path}")
 
     if inappropriate_detected:
-        predictions.append({"whole_image_label": "inappropriate", "total_confidence": average_confidence})
+        average_confidence = np.mean(I_individual_confidences) if I_individual_confidences else 0.0
+        Ap_average_confidence = np.mean(A_individual_confidences) if A_individual_confidences else 0.0
+        predictions.append({"whole_image_label": "inappropriate", "total_confidence": average_confidence, "average_opposite_confidence": Ap_average_confidence})
     else:
-        predictions.append({"whole_image_label": "appropriate", "total_confidence": average_confidence})
-    
+        average_confidence = np.mean(A_individual_confidences) if A_individual_confidences else 0.0
+        In_average_confidence = np.mean(I_individual_confidences) if I_individual_confidences else 0.0
+        predictions.append({"whole_image_label": "appropriate", "total_confidence": average_confidence, "average_opposite_confidence": In_average_confidence})
+        
+    print(predictions)
     # Total running time
     end_time = time.time()
     predictions.append({"output_image_path": output_img_path})
@@ -179,6 +197,6 @@ def proposed_get_yolo_preds(image_path: str):
 
 
 # # # Run the YOLO predictions
-# if __name__ == '__main__':
+# if __name__ == '__main__':s
 #     proposed_get_yolo_preds("./DARKNET/test.jpg")
 
