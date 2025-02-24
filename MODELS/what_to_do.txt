@@ -49,6 +49,7 @@ DATASET IMBALANCE on MMU dataset
 
 build a inception-svm model
 build a inception only model
+
 build a resnet only model
 
 
@@ -94,3 +95,58 @@ Yes! If both training and validation loss are decreasing gradually, and validati
 ✅ Your model is learning effectively (since both losses are decreasing).
 ✅ Your model isn’t overfitting yet (since training loss isn’t lower than validation loss).
 ✅ The validation set might be slightly easier or less augmented, leading to better accuracy.
+
+
+
+
+
+GOOD PARAMS
+-top val acc
+epochs 10
+batch = 32
+dropout 0.3
+lr = 0.0001 
+
+-good
+epochs 10
+lr=0.0001
+dropout 0.4
+batch = 32
+
+
+-good
+epochs 10
+lr=0.0001
+dropout 0.3
+batch = 64
+
+
+GOOD PARAMS - ECD FULL DATASET
+balanced results - but slow val and train acc = 89
+epochs=10
+lr=0.0001
+batch = 64
+dropout 0.3
+
+balanced results - but slow val and train acc = 89 - NO OVERFITTING 
+epochs=10
+lr=0.0001
+Weight decay = 0.0001
+batch = 64
+dropout 0.3
+
+balanced results - but slow val and train acc = 90 - test 92 - NO OVERFITTING 
+epochs=5
+lr=0.0001
+Weight decay = 0.0001
+batch = 32
+dropout 0.3
+
+CJ
+- top val acc 5 
+- top val acc 10
+- 
+epochs 5
+batch = 64
+lr = 0.0001 
+dropout 0.4

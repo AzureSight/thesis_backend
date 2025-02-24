@@ -1,6 +1,8 @@
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
-from PIL import Image
+from PIL import Image as i
+import torchvision.transforms.functional as F
+
 
 val_test_transform_resnet = transforms.Compose([
     transforms.Resize((224, 224), interpolation=transforms.InterpolationMode.BICUBIC),
@@ -14,10 +16,28 @@ val_test_transform_inception = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
+# class AugmentedImageFolder_resnet(Dataset):
+#     def __init__(self, dataset):
+#         self.dataset = dataset
+#         self.transform = val_test_transform_resnet 
+
+#     def __len__(self):
+#         return 2 * len(self.dataset)
+
+#     def __getitem__(self, index):
+#         original_index = index // 2
+#         image, label = self.dataset[original_index]
+
+#         if index % 2 == 1:
+#             image = transforms.functional.hflip(image)
+
+#         image = self.transform(image)
+#         return image, label
 class AugmentedImageFolder_resnet(Dataset):
-    def __init__(self, dataset):
+    def __init__(self, dataset, device='cuda'):
         self.dataset = dataset
-        self.transform = val_test_transform_resnet 
+        self.device = device
+        self.transform = val_test_transform_resnet  # Ensure this works with GPU tensors
 
     def __len__(self):
         return 2 * len(self.dataset)
@@ -26,16 +46,23 @@ class AugmentedImageFolder_resnet(Dataset):
         original_index = index // 2
         image, label = self.dataset[original_index]
 
+        # # Move image to GPU
+        # image = image.to(self.device)
+
+        # Apply GPU-based horizontal flip
         if index % 2 == 1:
-            image = transforms.functional.hflip(image)
+            image = F.hflip(image)  # GPU-based flip
 
-        image = self.transform(image)
+        # Apply transformations (ensure these support GPU tensors)
+        image = self.transform(image)  
+
         return image, label
-
+    
 class AugmentedImageFolder_inception(Dataset):
-    def __init__(self, dataset):
+    def __init__(self, dataset, device='cuda'):
         self.dataset = dataset
-        self.transform = val_test_transform_inception 
+        self.device = device
+        self.transform = val_test_transform_inception  # Ensure this works with GPU tensors
 
     def __len__(self):
         return 2 * len(self.dataset)
@@ -44,11 +71,35 @@ class AugmentedImageFolder_inception(Dataset):
         original_index = index // 2
         image, label = self.dataset[original_index]
 
-        if index % 2 == 1:
-            image = transforms.functional.hflip(image)
+        # Move image to GPU
+        # image = image.to(self.device)
 
+        # Apply GPU-based horizontal flip
+        if index % 2 == 1:
+            image = F.hflip(image)  # GPU-based augmentation
+
+        # Apply transformations (ensure they support GPU tensors)
         image = self.transform(image)
+
         return image, label
+    
+# class AugmentedImageFolder_inception(Dataset):
+#     def __init__(self, dataset):
+#         self.dataset = dataset
+#         self.transform = val_test_transform_inception 
+
+#     def __len__(self):
+#         return 2 * len(self.dataset)
+
+#     def __getitem__(self, index):
+#         original_index = index // 2
+#         image, label = self.dataset[original_index]
+
+#         if index % 2 == 1:
+#             image = transforms.functional.hflip(image)
+
+#         image = self.transform(image)
+#         return image, label
 
 class Applytransform_resnet(Dataset):
     def __init__(self, subset):
@@ -61,7 +112,7 @@ class Applytransform_resnet(Dataset):
     def __getitem__(self, index):
         image_path, label = self.subset.dataset.samples[self.subset.indices[index]]  # Get correct file path
 
-        image = Image.open(image_path).convert("RGB")  # Load im
+        image = i.open(image_path).convert("RGB")  # Load im
         
         if self.transform:
             image = self.transform(image)  # Apply transformations
@@ -79,7 +130,7 @@ class Applytransform_inception(Dataset):
     def __getitem__(self, index):
         image_path, label = self.subset.dataset.samples[self.subset.indices[index]]  # Get correct file path
 
-        image = Image.open(image_path).convert("RGB")  # Load im
+        image = i.open(image_path).convert("RGB")  # Load im
         
         if self.transform:
             image = self.transform(image)  # Apply transformations

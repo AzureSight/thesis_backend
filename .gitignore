@@ -16,4 +16,12 @@ MODELS/DATASETS
 MODELS/DARKNET
 MODELS/train_45
 MODELS/train_800
+MODELS/training_history
 Saved models/
+DARKNET/
+testing/
+train_45/
+train_416x416/
+testno_person/
+testnotsquare/
+testnotsquare2/
