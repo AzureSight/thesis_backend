@@ -175,3 +175,30 @@ if epoch == 10:
 64, 0.0001, all layers = 95.26 val acc
 
 
+64, 0.0001 LR, 0.001 WD, 64 dense 5 epochs = 93
+64, 0.0001 LR, 0.001 WD, 128 dense 5 epochs = 93 but ugly graph butno overfit
+try batch 32
+
+
+
+FINETUNE1 15 
+0.2
+unfreezed thrice at 9, 13,15
+
+FINETUNE2 15 
+0.3
+unfreezed thrice at 11,13,15
+
+FINETUNE3 15 
+- unfrezed once at 11
+0.7
+
+
+Retrain Proposed
+ECD Augmented 10 - same ra hahah wala na giusab
+ECD Augmented 15 - done
+
+ECD Non Augmented 15
+
+MMU augmented 15
+MMU Non augmented 15
