@@ -25,3 +25,12 @@ train_416x416/
 testno_person/
 testnotsquare/
 testnotsquare2/
+Whole Image Output/
+MODELS/ECD TRAINING
+MODELS/FINETUNING
+MODELS/Inception
+MODELS/MMU TRAINING
+MODELS/PROTOTYPEMODELS
+MODELS/Training Merge
+MODELS/training_history
+uploads_ads/
